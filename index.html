@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<head>
+<link rel="stylesheet" type="text/css" href="styles/stuff.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="jquery/jquery-ui.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="jquery/jquery-ui.structure.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="jquery/jquery-ui.theme.css" media="screen"/>
+<script src="jquery/jquery-3.1.0.js"></script>
+<script src="jquery/jquery-ui.js"></script>
+
+
+<!--script src="scripts/jquery-t0mpl.js"></script -->
+<!--script src="scripts/jquery.validate.js"--></script>
+<!--script src="scripts/jquery-serialization.js"></script-->
+<!--script src="scripts/jquery-ui.js"></script-->
+<script src="app/localStorage-controller.js"></script>
+<script src="app/stuff-controller.js"></script>
+<script src="app/page-controller.js"></script>
+
+<!--script src="scripts/dialog-controller.js"></script-->
+<header>
+	<div id="stuff-title">
+		<span id="stuff-title">This is the Stuff Page</span>
+	</div>
+	<div id="stuff-subtitle">
+		<span id="stuff-subtitle">and as we all know, stuff happens! </span>
+	</div>
+</header>
+	<main id="stuffPage">
+	<div class="edit-control">
+		<span class="control-label">List of Stuff:</span>
+	</div>
+	<div class="spacer-block"/>
+	<div class="row-container list-header"> 
+		<div class="id-cell">ID</div>
+		<div class="description-cell">Description of Stuff</div>
+	</div>
+	<div class="row-container">
+		<div class="id-cell"></div> 
+		<div class="description-cell">
+			<input type="text" id="newstuff" disabled="disbled" class="new-text-box" />
+		</div>
+		<div id="new-data-controls">
+			<button type="button" id="addnewstuff" value="New" class="edit-record-control">New</button>	
+			<!--button type="button" id="cancel-new-record" value="Cancel" class="edit-record-control">Cancel</button-->	
+		</div>
+	</div>
+	<div id="stuffList"> 
+		
+
+	</div>
+	
+	<div id="dialog-text" hidden="hidden">This is a test!</div>
+	</main>
+</body>
+</html>
+
+<script>
+$(document).ready( function() {
+    stuffController().init($('#stuffPage'));
+	//stuffController($('#stuffPage'));
+});
+
+</script>
