@@ -1,4 +1,4 @@
-(pageController = function (page){
+(PageController = function (page){
 
 	var $myPage = page;
 	var $addBbutton = $myPage.find('#addNewStuffButton');
@@ -52,8 +52,6 @@
 			row.appendChild(dataControls);
 			
 			$stuffList.append(row);
-			
-			
 			
 		}
 		
