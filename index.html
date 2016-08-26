@@ -58,7 +58,9 @@
 
 <script>
 $(document).ready( function() {
-    PageController();
+     console.log('page = '+ $('#stuffPage'));
+    PageController($('#stuffPage'));
+	//x.initialize($('#stuffPage'));
     //stuffController().init($('#stuffPage'));
 	//stuffController($('#stuffPage'));
 });
