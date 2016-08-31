@@ -3,6 +3,7 @@
 	
 	var $newRecordControl = $(webPage).find('#addnewstuff');
 	var $newRecordDesc = $(webPage).find('#newstuff');
+	var $newDataControls = $(webPage).find('#new-data-controls');
 	var $recordList = $(webPage).find('#stuffList');
 	var dataStore = dsController();
 	dataStore.init();
@@ -36,7 +37,7 @@
 			editControl.setAttribute('value', items[item].key);
 			editControl.setAttribute('class', 'edit-record-control');
 			editControl.setAttribute('type', 'button');
-			//editControl.addEventListener('click', newRecordClickEvent(event));
+			editControl.addEventListener('click', editRecordClickEvent);
 			editControl.appendChild(document.createTextNode('Edit'));
 			
 			var deleteControl = document.createElement('button');
@@ -44,23 +45,102 @@
 			deleteControl.setAttribute('class', 'edit-record-control');
 			deleteControl.setAttribute('value', items[item]);
 			deleteControl.setAttribute('type', 'button');
-			//deleteControl.addEventListener('click', deleteRecordClickEvent(event));	
+			//deleteControl.addEventLloistener('click', deleteRecordClickEvent(event));	
 			deleteControl.appendChild(document.createTextNode('Delete'));			
 			
 			dataControlContainer.appendChild(editControl);	
 			dataControlContainer.appendChild(deleteControl);
+			rowContainer.appendChild(dataControlContainer);
 
 			$recordList.append(rowContainer);
 			
 		}
 		
-	function saveNewRecordClickEvent(event){}
+
 	
-	function cancelNewRecordClickEvent(event) {}
+	function newRecordClickEvent(event) {
+		console.log('new rec control clicked');
+		event.preventDefault();
+		event.stopPropagation();
+		console.log($newRecordControl);
+		$newRecordControl.text('Save');
+		$newRecordControl.off('click');
+		$newRecordControl.click(saveNewRecordClickEvent);
+		
+		var cancelNewRecordControl = document.createElement('button');
+		cancelNewRecordControl.setAttribute('type', 'button');
+		cancelNewRecordControl.setAttribute('class', 'edit-record-control');
+		cancelNewRecordControl.value = 'Cancel';
+		$(cancelNewRecordControl).text('Cancel');
+		cancelNewRecordControl.id = 'cancel-new-record';
+		$newDataControls.append(cancelNewRecordControl);
+		
+		$('.edit-record-control').not($newRecordControl).not($(cancelNewRecordControl)).attr('disabled', 'disabled'); 
+					
+		$newRecordDesc.removeAttr('disabled');
+		$newRecordDesc.focus();
+		$('#cancel-new-record').click(cancelNewRecordClickEvent);
+		
+		
+	}
+		
+	function saveNewRecordClickEvent (event) {
+		console.log('save new rec control clicked');
+		event.stopPropagation();
+		event.preventDefault();
+	    if ($newRecordDesc.val() != ''){
+			var val = $newRecordDesc.val();
+			var index = dataStore.set(val);
+			$newRecordDesc.val('');
+		}
+		$recordList.empty();
+		loadAll();
+		$newRecordControl.off('click');
+		$newRecordControl.click(newRecordClickEvent);
+		$newRecordDesc.attr('disabled', 'disabled');
+		document.getElementById('cancel-new-record').remove();
+		$('.edit-record-control').not($newRecordControl).removeAttr('disabled');
+			
+	}
 	
-	function editRecordClickEvent(event) {}
 	
-	function saveRecordClickEvent(event){}
+	
+	$newRecordControl.on('click', newRecordClickEvent);
+	
+	function cancelNewRecordClickEvent(event) {
+		console.log('cancelNewRecordClickEvent clicked');
+		event.preventDefault();
+		event.stopPropagation();
+		$newRecordControl.text('New');
+		$newRecordControl.off('click');
+		$newRecordControl.click(newRecordClickEvent);
+		$newRecordDesc.val('');
+		$newRecordDesc.attr('disabled', 'disabled');
+		$('.edit-record-control').not($newRecordControl).removeAttr('disabled');
+		this.remove();
+		
+		
+	}
+	
+	
+	function editRecordClickEvent (event) {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		var $valDiv = $(webPage).find('#valValue-' + this.value);
+        var recordDescription = $valDiv.text();
+        $valDiv.empty();
+		 $('<input>').val(recordDescription).attr('id', 'textBox-' + this.value)
+			.attr('class', 'edit-record-textbox')
+			.attr('type', 'text')
+			.appendTo($valDiv)
+			.focus();
+		
+		$(this).text('Save');
+ 		
+		
+	}
+	
 	
 	function deleteRecordClickEvent(event){}
 	
