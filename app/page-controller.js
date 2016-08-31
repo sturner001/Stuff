@@ -104,10 +104,33 @@
 	}
 	
 	
+	function saveEditRecordClickEvent (event) {
+		event.preventDefault();
+		event.stopPropagation();
+		var $valDiv = $(webPage).find('#valValue-' + this.value);
+		var $textBox = $(webPage).find('#textBox-' + this.value);
+		var tempVal = $textBox.val();
+		dataStore.put(this.value, tempVal);
+		$textBox.remove();
+		valDiv.text(tempVal);
+		$(this).off('click');
+		$(this).click(editRecordClickEvent);
+		var $deleteControl = $webPage('#buDelete' + this.value);
+		$deleteControl.text('Delete');
+		$deleteControl.off(click);
+		$deleteControl.click(deleteRecordClickEvent);
+		$('.edit-record-control').not($(this)).not($deleteControl)
+			.removeAttr('disabled');
+		
+	}
+	
+	
 	
 	$newRecordControl.on('click', newRecordClickEvent);
 	
 	function cancelNewRecordClickEvent(event) {
+		event.stopPropagation();
+		event.preventDefault();
 		console.log('cancelNewRecordClickEvent clicked');
 		event.preventDefault();
 		event.stopPropagation();
@@ -137,7 +160,18 @@
 			.focus();
 		
 		$(this).text('Save');
- 		
+		$(this).off('click');
+		$(this).click(saveEditRecordClickEvent);
+		
+		
+		
+		var $deleteControl = $(webPage).find('#buDelete' + this.value);
+		$deleteControl.text('Cancel');
+		$deleteControl.off('click');
+		$deleteControl.click(cancelEditActionClickEvent);
+		
+		$('.edit-record-control').not($(this)).not($deleteControl)
+			.attr('disabled', 'disabled' ); 
 		
 	}
 	
