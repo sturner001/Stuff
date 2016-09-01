@@ -1,4 +1,4 @@
-(PageController = function(page) {
+PageController = function(page) {
 	var webPage = page;
 	
 	var $newRecordControl = $(webPage).find('#addnewstuff');
@@ -37,29 +37,30 @@
 			editControl.setAttribute('value', items[item].key);
 			editControl.setAttribute('class', 'edit-record-control');
 			editControl.setAttribute('type', 'button');
-			editControl.addEventListener('click', editRecordClickEvent);
+			//editControl.addEventListener('click', editRecordClickEvent);
 			editControl.appendChild(document.createTextNode('Edit'));
 			
 			var deleteControl = document.createElement('button');
-			deleteControl.setAttribute('id', 'buDelete');
+			deleteControl.setAttribute('id', 'buDelete' + items[item].key);
 			deleteControl.setAttribute('class', 'edit-record-control');
-			deleteControl.setAttribute('value', items[item]);
+			deleteControl.setAttribute('value', items[item].key);
 			deleteControl.setAttribute('type', 'button');
-			//deleteControl.addEventLloistener('click', deleteRecordClickEvent(event));	
+				
 			deleteControl.appendChild(document.createTextNode('Delete'));			
 			
 			dataControlContainer.appendChild(editControl);	
 			dataControlContainer.appendChild(deleteControl);
 			rowContainer.appendChild(dataControlContainer);
-
-			$recordList.append(rowContainer);
+			            
+			$(editControl).click(editRecordClickEvent);
+			$(deleteControl).click(deleteRecordClickEvent);
 			
+			$recordList.append(rowContainer);
 		}
-		
-
+	}
 	
 	function newRecordClickEvent(event) {
-		console.log('new rec control clicked');
+		console.log('newRecordClickEvent fired');
 		event.preventDefault();
 		event.stopPropagation();
 		console.log($newRecordControl);
@@ -81,11 +82,10 @@
 		$newRecordDesc.focus();
 		$('#cancel-new-record').click(cancelNewRecordClickEvent);
 		
-		
 	}
 		
 	function saveNewRecordClickEvent (event) {
-		console.log('save new rec control clicked');
+		console.log('saveNewRecordClickEvent fired');
 		event.stopPropagation();
 		event.preventDefault();
 	    if ($newRecordDesc.val() != ''){
@@ -93,6 +93,7 @@
 			var index = dataStore.set(val);
 			$newRecordDesc.val('');
 		}
+		$(this).text('New');
 		$recordList.empty();
 		loadAll();
 		$newRecordControl.off('click');
@@ -103,32 +104,8 @@
 			
 	}
 	
-	
-	function saveEditRecordClickEvent (event) {
-		event.preventDefault();
-		event.stopPropagation();
-		var $valDiv = $(webPage).find('#valValue-' + this.value);
-		var $textBox = $(webPage).find('#textBox-' + this.value);
-		var tempVal = $textBox.val();
-		dataStore.put(this.value, tempVal);
-		$textBox.remove();
-		valDiv.text(tempVal);
-		$(this).off('click');
-		$(this).click(editRecordClickEvent);
-		var $deleteControl = $webPage('#buDelete' + this.value);
-		$deleteControl.text('Delete');
-		$deleteControl.off(click);
-		$deleteControl.click(deleteRecordClickEvent);
-		$('.edit-record-control').not($(this)).not($deleteControl)
-			.removeAttr('disabled');
-		
-	}
-	
-	
-	
-	$newRecordControl.on('click', newRecordClickEvent);
-	
 	function cancelNewRecordClickEvent(event) {
+		console.log('cancelNewRecordClickEvent fired');
 		event.stopPropagation();
 		event.preventDefault();
 		console.log('cancelNewRecordClickEvent clicked');
@@ -144,27 +121,27 @@
 		
 		
 	}
-	
-	
+
 	function editRecordClickEvent (event) {
+		console.log('editRecordClickEvent fired');
 		event.preventDefault();
 		event.stopPropagation();
 		
 		var $valDiv = $(webPage).find('#valValue-' + this.value);
         var recordDescription = $valDiv.text();
-        $valDiv.empty();
-		 $('<input>').val(recordDescription).attr('id', 'textBox-' + this.value)
+        $valDiv.text('');
+	    
+		$('<input>').val(recordDescription).attr('id', 'textBox-' + this.value)
 			.attr('class', 'edit-record-textbox')
 			.attr('type', 'text')
 			.appendTo($valDiv)
 			.focus();
-		
+        
+		console.log($(this));
 		$(this).text('Save');
 		$(this).off('click');
-		$(this).click(saveEditRecordClickEvent);
-		
-		
-		
+		$(this).click(saveEditRecordClickEvent);		
+
 		var $deleteControl = $(webPage).find('#buDelete' + this.value);
 		$deleteControl.text('Cancel');
 		$deleteControl.off('click');
@@ -173,21 +150,68 @@
 		$('.edit-record-control').not($(this)).not($deleteControl)
 			.attr('disabled', 'disabled' ); 
 		
+	}	
+	
+	function saveEditRecordClickEvent (event) {
+		console.log('saveEditRecordClickEvent fired');
+		event.preventDefault();
+		event.stopPropagation();
+		var $valDiv = $(webPage).find('#valValue-' + this.value);
+		var $textBox = $(webPage).find('#textBox-' + this.value);
+		var tempVal = $textBox.val();
+		dataStore.put(this.value, tempVal);
+		$textBox.remove();
+		$valDiv.text(tempVal);
+		$(this).text('Edit');
+		$(this).off('click');
+		$(this).click(editRecordClickEvent);
+		var $deleteControl = $(webPage).find('#buDelete' + this.value);
+		$deleteControl.text('Delete');
+		$deleteControl.off('click');
+		$deleteControl.click(deleteRecordClickEvent);
+		$('.edit-record-control').not($(this)).not($deleteControl)
+			.removeAttr('disabled');
+		
 	}
+
 	
 	
-	function deleteRecordClickEvent(event){}
-	
-	function cancelEditActionClickEvent(event) {}
+	function cancelEditActionClickEvent(event) {
+		console.log('cancelEditActionClickEvent fired');
+		event.preventDefault();
+		event.stopPropagation();
+		var $valDiv = $(webPage).find('#valValue-' + this.value);
+		var $textBox = $(webPage).find('#textBox-' + this.value);
+		var tempVal = $textBox.val();
+		
+		$textBox.remove();
+		$valDiv.text(dataStore.get(this.value));
+		$(this).text('Delete');
+		$(this).off('click');
+		$(this).click(deleteRecordClickEvent);
+		var $editControl = $(webPage).find('#buEdit' + this.value);
+		
+		$editControl.off('click');
+		$editControl.click(editRecordClickEvent);
+		$editControl.text('Edit');
+		$('.edit-record-control').not($editControl).not($(this)).removeAttr('disabled');
+	}
 			
-	}
 	
+	
+	function deleteRecordClickEvent(event){
+		console.log('deleteRecordClickEvent');
+		event.preventDefault();
+		event.stopPropagation();
+		
+	}
 	
 	loadAll();
+	$newRecordControl.on('click', newRecordClickEvent);
 	
 	
 
-})();    	
+}    	
 	//function loadAll(){
 	//	var items = dataStore.getAll();
 	//	var item;
