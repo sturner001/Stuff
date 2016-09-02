@@ -15,9 +15,11 @@ PageController = function(page) {
 		
 		for (item in items) {
 			var rowContainer = document.createElement('div');
-			rowContainer.setAttribute('id', 'keyValue-' + items[item].key);
+			rowContainer.setAttribute('id', 'row-' + items[item].key);
 			rowContainer.setAttribute('class', 'row-container');
-				
+			
+
+			
 			var keyContainer = document.createElement('div');
 			keyContainer.setAttribute('class', 'id-cell');
 			keyContainer.appendChild(document.createTextNode(items[item].key));
@@ -68,19 +70,29 @@ PageController = function(page) {
 		$newRecordControl.off('click');
 		$newRecordControl.click(saveNewRecordClickEvent);
 		
-		var cancelNewRecordControl = document.createElement('button');
-		cancelNewRecordControl.setAttribute('type', 'button');
-		cancelNewRecordControl.setAttribute('class', 'edit-record-control');
-		cancelNewRecordControl.value = 'Cancel';
-		$(cancelNewRecordControl).text('Cancel');
-		cancelNewRecordControl.id = 'cancel-new-record';
-		$newDataControls.append(cancelNewRecordControl);
+		//var cancelNewRecordControl = document.createElement('button');
+		//cancelNewRecordControl.setAttribute('type', 'button');
+		//cancelNewRecordControl.setAttribute('class', 'edit-record-control');
+		//cancelNewRecordControl.value = 'Cancel';
+		//$(cancelNewRecordControl).text('Cancel');
+		//cancelNewRecordControl.id = 'cancel-new-record';
+		//$newDataControls.append(cancelNewRecordControl);
 		
-		$('.edit-record-control').not($newRecordControl).not($(cancelNewRecordControl)).attr('disabled', 'disabled'); 
+		$('<button>',{
+			type: 'button',
+			value: 'Cancel',
+			id: 'cancel-new-record',
+			click: cancelNewRecordClickEvent
+		
+		}).attr('class', 'edit-record-control').text('Cancel')
+			.appendTo($newDataControls);
+		
+		
+		$('.edit-record-control').not($newRecordControl).not($('#cancel-new-record')).attr('disabled', 'disabled'); 
 					
 		$newRecordDesc.removeAttr('disabled');
 		$newRecordDesc.focus();
-		$('#cancel-new-record').click(cancelNewRecordClickEvent);
+		//$('#cancel-new-record').click(cancelNewRecordClickEvent);
 		
 	}
 		
@@ -204,6 +216,30 @@ PageController = function(page) {
 		event.preventDefault();
 		event.stopPropagation();
 		
+		var key = this.value;
+		var value = $('#valValue-' + key).text();
+		var messageText = "To delete record No. '" + key + "', '" + value + "' click the 'Yes' button.";
+		$('<div>' + messageText +  '</div>').dialog({
+			width: 300,
+			height: 250,
+			modal: true,
+			resize: false,
+			buttons: {
+				'Yes': function () {
+					dataStore.removeIt(key);
+					$recordList.empty();
+					loadAll();
+					$(this).dialog('close');
+				},
+				'No': function () {
+					$(this).dialog('close');
+				}
+				
+			}
+			
+		})
+		
+		
 	}
 	
 	loadAll();
@@ -212,78 +248,4 @@ PageController = function(page) {
 	
 
 }    	
-	//function loadAll(){
-	//	var items = dataStore.getAll();
-	//	var item;
-	//	
-	//	for(item in items) {
-	//		var row = document.createElement('div')
-	//			.setAttribute('id', 'keyValue-' + items[item].key)
-	//			.setAttribute('class', 'row-container');
-	//			
-	//		var keyValue = document.createElement('div')
-	//			.setAttribute('class', 'id-cell');
-	//					
-	//		keyValue.appendChild(document.createTextNode(items[item].key));
-	//			
-	//		row.appendChild(keyValue);	
-	//			
-	//		var valValue = document.createElement('div')
-	//			.setAttribute('id', 'valValue-' + items[item].key)
-	//			.setAttribute('class', 'description-cell');
-	//		
-	//		valValue.appendChild(document.createTextNode(items[item].val));
-	//		row.appendChild(valValue);
-	//		
-	//		var dataControls = document.createElement('div');
-	//		
-	//		var editControl = document.createElement('button')
-	//			.setAttribute('id', 'buEdit' + items[item].key)
-	//			.setAttribute('value', items[item].key)
-	//			.setAttribute('class', 'edit-record-control')
-	//			.setAttribute('type', 'button')
-	//			.addEventListener('click', newRecordClickEvent(event));
-	//			
-	//		editControl.appendChild(createTextNode('Edit'));
-	//		dataControls.appendChild(editControl);
-	//		
-	//		var deleteControl = document.createElement('button')
-	//			.setAttribute('id', 'buDelete')
-	//			.setAttribute('class', 'edit-record-control')
-	//			.setAttribute('value', items[item])
-	//			.setAttribute('type', 'button')
-	//			.addEventListener('click', deleteRecordClickEvent(event));				
-	//		
-	//		dataControls.appendChild(deleteControl);
-	//		
-	//		row.appendChild(dataControls);
-	//		
-	//		$stuffList.append(row);
-	//		
-	//		
-	//		
-	//	}
-	//	
-	//	
-	//	
-	
-	
-	
-	//function saveNewRecordClickEvent(event){}
-	//
-	//function cancelNewRecordClickEvent(event) {}
-	//
-	//function editRecordClickEvent(event) {}
-	//
-	//function saveRecordClickEvent(event){}
-	//
-	//function deleteRecordClickEvent(event){}
-	//
-	//function cancelEditActionClickEvent(event) {}
-	
-	
-	
-	
-	
-	
 	
