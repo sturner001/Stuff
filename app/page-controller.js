@@ -27,7 +27,10 @@ PageController = function(page) {
 			}).attr('class', 'description-cell').text(items[item].val)
 				.appendTo($rowContainer);
 
-			$dataControlContainer = $('<div>').attr('class', 'data-control-container').appendTo($recordList);
+			$dataControlContainer = $('<div>')
+				.attr('class', 'data-control-container')
+				.appendTo($recordList);
+				
 			$('<button>', {
 				id: 'buEdit' + items[item].key,
 				value: items[item].key,
@@ -64,7 +67,7 @@ PageController = function(page) {
 			id: 'cancel-new-record',
 			click: cancelNewRecordClickEvent
 		
-		}).attr('class', 'edit-record-control').text('Cancel')
+		}).attr('class', 'new-record-control').text('Cancel')
 			.appendTo($newDataControls);
 		
 		$('.edit-record-control').not($newRecordControl).not($('#cancel-new-record')).attr('disabled', 'disabled'); 

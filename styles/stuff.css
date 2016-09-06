@@ -46,23 +46,40 @@ main {
 	float: left;
 	/*max-width: 40px;
 	min-width: 40px;*/
-	margin-right: 2px;
+	margin-right: 5px;
 	width: 40px;
 	min-height: 1px;
+	text-align: center;
 }
 
 .edit-record-control
 {
 	width: 56px;
 	margin-left: 5px;
-	margin-right: 2px;
+	margin-right: 5px;
 }
 
+.new-record-control{
+	width: 56px;
+	margin-left: 5px;
+	margin-right: 1px;	
+}
+
+.description-edit-cell
+{
+	float: left;
+	width: 180px;
+	margin-right: 4px;
+	
+}
 .description-cell
 {
 	float: left;
 	width: 180px;
+	padding-left: 4px;
+	
 }
+
 
 .row-container 
 {
@@ -80,7 +97,7 @@ main {
 {
 	clear: both; 
 	margin-top: 20px;
-    padding-right: 10px;
+    padding-right: 20px;
     padding-bottom: 15px;
     float: left;
 }
@@ -92,7 +109,7 @@ main {
 }
 
 .data-control-container{
-	/*width: 100px;*/
+	width: 100%;
 }
 
 .new-text-box{
