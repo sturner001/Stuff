@@ -91,6 +91,10 @@ main {
 	height: 100%;
 }
 
+.data-control-container{
+	/*width: 100px;*/
+}
+
 .new-text-box{
 	width: 95%;
 	

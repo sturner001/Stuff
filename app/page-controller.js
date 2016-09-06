@@ -9,55 +9,43 @@ PageController = function(page) {
 	dataStore.init();
 	
 	function loadAll(){
-		console.log('loadAll()');
+		console.log('loadAll() method fired');
 		var items = dataStore.getAll();
 		var item;
 		
 		for (item in items) {
-			var rowContainer = document.createElement('div');
-			rowContainer.setAttribute('id', 'row-' + items[item].key);
-			rowContainer.setAttribute('class', 'row-container');
+			var $rowContainer = $('<div>', {
+				id: 'row-' + items[item].key
+			}).attr('class', 'row-container')
+			.appendTo($recordList);
 			
-
-			
-			var keyContainer = document.createElement('div');
-			keyContainer.setAttribute('class', 'id-cell');
-			keyContainer.appendChild(document.createTextNode(items[item].key));
-
-			rowContainer.appendChild(keyContainer);
-			
-			var valContainer = document.createElement('div');
-			valContainer.setAttribute('id', 'valValue-' + items[item].key);
-			valContainer.setAttribute('class', 'description-cell');
-			
-			valContainer.appendChild(document.createTextNode(items[item].val));
-			rowContainer.appendChild(valContainer);
-			
-			var dataControlContainer = document.createElement('div');
-			var editControl = document.createElement('button');
-			editControl.setAttribute('id', 'buEdit' + items[item].key);
-			editControl.setAttribute('value', items[item].key);
-			editControl.setAttribute('class', 'edit-record-control');
-			editControl.setAttribute('type', 'button');
-			//editControl.addEventListener('click', editRecordClickEvent);
-			editControl.appendChild(document.createTextNode('Edit'));
-			
-			var deleteControl = document.createElement('button');
-			deleteControl.setAttribute('id', 'buDelete' + items[item].key);
-			deleteControl.setAttribute('class', 'edit-record-control');
-			deleteControl.setAttribute('value', items[item].key);
-			deleteControl.setAttribute('type', 'button');
+			$('<div>').text(items[item].key).attr('class', 'id-cell')
+				.appendTo($rowContainer);
 				
-			deleteControl.appendChild(document.createTextNode('Delete'));			
+			$('<div>', {
+				id: 'valValue-' + items[item].key
+			}).attr('class', 'description-cell').text(items[item].val)
+				.appendTo($rowContainer);
+
+			$dataControlContainer = $('<div>').attr('class', 'data-control-container').appendTo($recordList);
+			$('<button>', {
+				id: 'buEdit' + items[item].key,
+				value: items[item].key,
+				type: 'button',
+				click: editRecordClickEvent
+				
+			}).attr('class', 'edit-record-control').text('Edit')
+				.appendTo($dataControlContainer);
 			
-			dataControlContainer.appendChild(editControl);	
-			dataControlContainer.appendChild(deleteControl);
-			rowContainer.appendChild(dataControlContainer);
-			            
-			$(editControl).click(editRecordClickEvent);
-			$(deleteControl).click(deleteRecordClickEvent);
+			$('<button>', {
+				id: 'buDelete' + items[item].key,
+				value: items[item].key,
+				type: 'button',
+				click: deleteRecordClickEvent
+				
+			}).attr('class', 'edit-record-control').text('Delete')
+				.appendTo($dataControlContainer);
 			
-			$recordList.append(rowContainer);
 		}
 	}
 	
@@ -70,14 +58,6 @@ PageController = function(page) {
 		$newRecordControl.off('click');
 		$newRecordControl.click(saveNewRecordClickEvent);
 		
-		//var cancelNewRecordControl = document.createElement('button');
-		//cancelNewRecordControl.setAttribute('type', 'button');
-		//cancelNewRecordControl.setAttribute('class', 'edit-record-control');
-		//cancelNewRecordControl.value = 'Cancel';
-		//$(cancelNewRecordControl).text('Cancel');
-		//cancelNewRecordControl.id = 'cancel-new-record';
-		//$newDataControls.append(cancelNewRecordControl);
-		
 		$('<button>',{
 			type: 'button',
 			value: 'Cancel',
@@ -87,13 +67,10 @@ PageController = function(page) {
 		}).attr('class', 'edit-record-control').text('Cancel')
 			.appendTo($newDataControls);
 		
-		
 		$('.edit-record-control').not($newRecordControl).not($('#cancel-new-record')).attr('disabled', 'disabled'); 
 					
 		$newRecordDesc.removeAttr('disabled');
 		$newRecordDesc.focus();
-		//$('#cancel-new-record').click(cancelNewRecordClickEvent);
-		
 	}
 		
 	function saveNewRecordClickEvent (event) {
